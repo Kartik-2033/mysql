@@ -135,6 +135,135 @@ insert  into `hobby`(`id`,`name`,`created_at`,`updated_at`) values
 (19,'Housework','2023-07-05 16:21:32','2023-07-05 16:21:32'),
 (20,'Movie Watching','2023-07-05 16:21:48','2023-07-05 16:21:48');
 
+/*All Querys */
+
+/*• Insert multiple data in all tables*/
+
+insert  into `employee_hobby`(`id`,`emp_id`,`emp_hobby`,`created_at`,`updated_at`) values 
+(1,1,4,'2023-07-05 16:22:57','2023-07-05 16:22:57'),
+(2,1,17,'2023-07-05 16:23:20','2023-07-05 16:23:20'),
+(3,2,1,'2023-07-05 16:23:28','2023-07-05 16:23:28'),
+(4,2,2,'2023-07-05 16:23:33','2023-07-05 16:23:33');
+
+/*• Update data of all tables*/
+
+UPDATE `employee`.`employee_data` SET `first_name` = 'Priyansh' WHERE `id` = 8 ;
+UPDATE `employee`.`employee_hobby` SET `emp_hobby` = '20' WHERE `id` = '11';
+UPDATE `employee`.`employee_salary` SET `emp_salary` = '0' WHERE `id` = '11';
+UPDATE `employee`.`hobby` SET `name` = 'HouseClean' WHERE `id` = '19';
+
+/*• Delete 2 records of all tables*/
+DELETE FROM `employee`.`employee_data` WHERE `id` = '11';
+DELETE FROM `employee`.`employee_data` WHERE `id` = '9';
+DELETE FROM `employee`.`employee_hobby` WHERE `id` = '20'; 
+DELETE FROM `employee`.`employee_hobby` WHERE `id` = '10'; 
+DELETE FROM `employee`.`employee_salary` WHERE `id` = '5';
+
+/*• Truncate all tables*/
+TRUNCATE TABLE employee_data;
+TRUNCATE TABLE employee_hobby;
+TRUNCATE TABLE employee_salary;
+TRUNCATE TABLE hobby;
+
+/*• Create separate select queries to get a hobby, employee, employee_salary, and employee_hobby.*/
+
+/*
+SELECT 
+  ed.id AS "Employee Id", 
+  CONCAT(ed.first_name, ' ', ed.last_name) AS "Employee", 
+  ed.mobile_number AS "Employee Mobile number", 
+  ed.address AS "Employee_Address",  
+  SUM(es.emp_salary) AS "Employee_Salary", 
+  GROUP_CONCAT(DISTINCT hobby.name) AS "Employee Hobiies"
+FROM 
+  employee_data AS ed 
+  INNER JOIN employee_salary AS es 
+	  ON ed.id = es.emp_id 
+  INNER JOIN employee_hobby AS eh 
+	  ON ed.id = eh.emp_id 
+  INNER JOIN hobby 
+	  ON eh.emp_hobby = hobby.id 
+WHERE 
+  ed.id = '10' 
+GROUP BY 
+  ed.id, es.emp_salary;
+*********************************************************************
+*/
+
+/*• Create a select single query to get all employee names, all hobby_name in a single column*/
+
+/*
+SELECT 
+  CONCAT(
+    CONCAT(ed.first_name, ' ', ed.last_name), 
+    ': ', 
+    GROUP_CONCAT(
+      DISTINCT IFNULL(
+        (hobby.name), 
+        "Employye Have No Hobby"
+      )
+    )
+  ) AS "Employee Name : Hobbies" 
+FROM 
+  employee_data AS ed
+  LEFT JOIN employee_hobby AS eh
+	  ON ed.id = eh.emp_id 
+  LEFT JOIN hobby 
+	  ON eh.emp_hobby = hobby.id 
+GROUP BY 
+  ed.id;
+*********************************************************************
+*/
+
+/*• Create a select query to get  employee name, his/her employee_salary*/
+
+/*
+SELECT 
+  CONCAT(ed.first_name, ' ', ed.last_name) AS "Employee", 
+  es.emp_salary AS "Salary" 
+FROM 
+  employee_data AS ed 
+  INNER JOIN employee_salary AS es 
+	  ON ed.id = es.emp_id 
+WHERE 
+  ed.id = '1' 
+GROUP BY 
+  ed.id;
+*********************************************************************
+*/
+
+/*• Create a select query to get employee name, total salary of employee, hobby name(comma-separated - you need to use a subquery for hobby name).*/
+
+/*
+SELECT 
+  CONCAT(ed.first_name, ' ', ed.last_name) AS "Employee", 
+  SUM(es.emp_salary) AS "Total Salary", 
+  GROUP_CONCAT(
+    DISTINCT IFNULL(
+      (Hobbies.name), 
+      "Employye Have No Hobby"
+    )
+  ) AS "Hobbies"
+FROM 
+  employee_data AS ed 
+  LEFT JOIN employee_salary AS es
+	  ON ed.id = es.emp_id 
+  LEFT JOIN employee_hobby AS eh
+	  ON ed.id = eh.emp_id 
+  LEFT JOIN (
+    (
+      SELECT 
+        (hobby.id), 
+        (hobby.name) 
+      FROM 
+        hobby 
+    )
+  ) AS Hobbies ON Hobbies.id = eh.emp_hobby 
+GROUP BY 
+  ed.id;
+*********************************************************************
+*/
+
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
 /*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
