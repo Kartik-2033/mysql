@@ -170,10 +170,9 @@ TRUNCATE TABLE hobby;
 /*
 SELECT 
   ed.id AS "Employee Id", 
-  CONCAT(ed.first_name, ' ', ed.last_name) AS "Employee", 
-  ed.mobile_number AS "Employee Mobile number", 
-  ed.address AS "Employee_Address",  
-  SUM(es.emp_salary) AS "Employee_Salary", 
+  CONCAT(ed.first_name, ' ', ed.last_name) AS "Employee",
+  (es.emp_salary) AS "Employee_Salary",
+  (es.date) AS "Salary Credit Date", 
   GROUP_CONCAT(DISTINCT hobby.name) AS "Employee Hobiies"
 FROM 
   employee_data AS ed 
@@ -184,9 +183,9 @@ FROM
   INNER JOIN hobby 
 	  ON eh.emp_hobby = hobby.id 
 WHERE 
-  ed.id = '10' 
+  ed.id = '1' 
 GROUP BY 
-  ed.id, es.emp_salary;
+  ed.id,es.emp_salary;
 *********************************************************************
 */
 
@@ -206,9 +205,9 @@ SELECT
   ) AS "Employee Name : Hobbies" 
 FROM 
   employee_data AS ed
-  LEFT JOIN employee_hobby AS eh
+  INNER JOIN employee_hobby AS eh
 	  ON ed.id = eh.emp_id 
-  LEFT JOIN hobby 
+  INNER JOIN hobby 
 	  ON eh.emp_hobby = hobby.id 
 GROUP BY 
   ed.id;
@@ -220,15 +219,13 @@ GROUP BY
 /*
 SELECT 
   CONCAT(ed.first_name, ' ', ed.last_name) AS "Employee", 
-  es.emp_salary AS "Salary" 
+  SUM(es.emp_salary) AS "Salary" 
 FROM 
   employee_data AS ed 
   INNER JOIN employee_salary AS es 
 	  ON ed.id = es.emp_id 
 WHERE 
-  ed.id = '1' 
-GROUP BY 
-  ed.id;
+  ed.id = '1' ;
 *********************************************************************
 */
 
@@ -237,7 +234,7 @@ GROUP BY
 /*
 SELECT 
   CONCAT(ed.first_name, ' ', ed.last_name) AS "Employee", 
-  SUM(es.emp_salary) AS "Total Salary", 
+  SUM(DISTINCT es.emp_salary) AS "Total Salary", 
   GROUP_CONCAT(
     DISTINCT IFNULL(
       (Hobbies.name), 
@@ -246,11 +243,11 @@ SELECT
   ) AS "Hobbies"
 FROM 
   employee_data AS ed 
-  LEFT JOIN employee_salary AS es
+  INNER JOIN employee_salary AS es
 	  ON ed.id = es.emp_id 
-  LEFT JOIN employee_hobby AS eh
+  INNER JOIN employee_hobby AS eh
 	  ON ed.id = eh.emp_id 
-  LEFT JOIN (
+  INNER JOIN (
     (
       SELECT 
         (hobby.id), 
