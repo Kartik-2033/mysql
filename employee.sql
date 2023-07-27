@@ -189,16 +189,12 @@ FROM
 SELECT 
   e.id AS "employee_id", 
   CONCAT(e.first_name, ' ', e.last_name) AS "employee_name", 
-  es.salary AS "salary" 
+  SUM(es.salary) AS "Total Salary"
 FROM 
-  employee AS e, 
-  employee_salary AS es 
-WHERE 
-  e.id = es.fk_employee_id 
+  employee e 
+INNER JOIN employee_salary es 
+        ON e.id = es.fk_employee_id 
 GROUP BY 
-  e.id,
-  es.salary
-ORDER BY
   e.id;
 
 /*• Create a select query to get employee name, total salary of employee, hobby name(comma-separated - you need to use a subquery for hobby name).*/
