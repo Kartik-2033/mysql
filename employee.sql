@@ -175,12 +175,12 @@ FROM
 /*• Create a select single query to get all employee names, all hobby_name in a single column*/
 
 SELECT 
-  CONCAT(first_name, ' ', last_name) AS "employee_name" 
+  CONCAT(first_name, ' ', last_name) AS "employee names" 
 FROM 
   employee 
 UNION ALL 
 SELECT 
-  NAME AS "hobby" 
+  NAME AS "hobby_name" 
 FROM 
   hobby;
 
@@ -188,8 +188,8 @@ FROM
 
 SELECT 
   e.id AS "employee_id", 
-  CONCAT(e.first_name, ' ', e.last_name) AS "employee_name", 
-  SUM(es.salary) AS "Total Salary"
+  CONCAT(e.first_name, ' ', e.last_name) AS "employee name", 
+  SUM(es.salary) AS "employee_salary"
 FROM 
   employee e 
 INNER JOIN employee_salary es 
@@ -200,8 +200,8 @@ GROUP BY
 /*• Create a select query to get employee name, total salary of employee, hobby name(comma-separated - you need to use a subquery for hobby name).*/
 
 SELECT  
-  CONCAT(e.first_name, ' ', e.last_name) AS "Employee", 
-  SUM(es.salary) AS "Total Salary", 
+  CONCAT(e.first_name, ' ', e.last_name) AS "employee name", 
+  SUM(es.salary) AS "total salary", 
   (
     SELECT 
       GROUP_CONCAT(h.name SEPARATOR ', ') 
@@ -211,7 +211,7 @@ SELECT
             ON h.id = eh.fk_employee_hobby_id 
     WHERE 
       e.id = eh.fk_employee_id
-  ) AS "Hobbies"
+  ) AS "hobby name"
 FROM 
   employee e 
   INNER JOIN employee_salary es 
